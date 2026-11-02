@@ -8,53 +8,66 @@
   <meta name="robots" content="noindex, nofollow">
   <meta name="description" content="Một món quà nhỏ nhân kỷ niệm 1 năm yêu nhau.">
   <title>Gửi Kim 💗 · 1 năm yêu nhau</title>
-
-  <!-- Favicon nhúng sẵn (tránh lỗi 404 favicon.ico trong console) -->
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E🐱%3C/text%3E%3C/svg%3E">
-
-  <!-- Phông Google Fonts: Pacifico + Dancing Script (tiêu đề, thư, chữ ký), Quicksand (nội dung).
-       Google tự trả về subset vietnamese qua unicode-range. Phông tự host: xem khối @font-face (comment) trong style.css -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600;700&family=Pacifico&family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet">
-
   <link rel="stylesheet" href="style.css">
 </head>
-
 <body>
-<!--
-  HỢP ĐỒNG DOM (các phase sau phải tuân theo)
-  - Mỗi cảnh: <section class="scene" id="scene-N">, N = 0..6. Cảnh đang hiện có class "is-active".
-    Cảnh không hiện: có thuộc tính inert + aria-hidden="true". Scenes.go(n) phải đổi cả 3 thứ này.
-  - Nút có data-action="next" → Scenes.go(current + 1); "restart" → về cảnh 0; "home" → thoát trang sở thích về cảnh 0.
-  - Phần tử có data-bind="herName|myName|startDateText" sẽ được script.js điền từ CONFIG
-    (chữ bên trong chỉ là dự phòng khi JS chưa chạy).
-  - Trang sở thích #page-likes là <main> riêng, mặc định hidden. Khi vào trang này, JS phải ẩn #stage.
-  - Các ô trống (id bắt đầu bằng s2-, s3-, s4-, s5-, s6-, likes-, qr-) do JS của từng phase đổ nội dung vào.
--->
-
-<!-- ===== SPRITE SVG DÙNG CHUNG (tự vẽ, không dùng asset ngoài) ===== -->
+<!-- ===== SPRITE SVG DÙNG CHUNG ===== -->
 <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
   <defs>
-    <!-- Mặt mèo: tai là tam giác nhọn -->
+    <!-- Mèo Hello Kitty (Không miệng, nơ đỏ, mũi vàng) -->
     <symbol id="i-cat" viewBox="0 0 120 108">
-      <polygon points="16,52 22,12 54,32" fill="#FFC2D6" stroke="#8C2F5A" stroke-width="4" stroke-linejoin="round"/>
-      <polygon points="104,52 98,12 66,32" fill="#FFC2D6" stroke="#8C2F5A" stroke-width="4" stroke-linejoin="round"/>
-      <polygon points="26,40 28,24 43,33" fill="#FF8FB1"/>
-      <polygon points="94,40 92,24 77,33" fill="#FF8FB1"/>
-      <ellipse cx="60" cy="68" rx="50" ry="36" fill="#FFF6EE" stroke="#8C2F5A" stroke-width="4"/>
-      <ellipse cx="41" cy="66" rx="5.5" ry="7.5" fill="#8C2F5A"/>
-      <ellipse cx="79" cy="66" rx="5.5" ry="7.5" fill="#8C2F5A"/>
-      <circle cx="43" cy="63" r="2" fill="#fff"/>
-      <circle cx="81" cy="63" r="2" fill="#fff"/>
-      <ellipse cx="29" cy="79" rx="8" ry="5" fill="#FF8FB1" opacity=".55"/>
-      <ellipse cx="91" cy="79" rx="8" ry="5" fill="#FF8FB1" opacity=".55"/>
-      <path d="M56 74h8l-4 5z" fill="#FF8FB1" stroke="#8C2F5A" stroke-width="2" stroke-linejoin="round"/>
-      <path d="M60 79q-4 7-10 3M60 79q4 7 10 3" fill="none" stroke="#8C2F5A" stroke-width="3" stroke-linecap="round"/>
-      <path d="M14 70l-10-3M14 76l-10 3M106 70l10-3M106 76l10 3" fill="none" stroke="#8C2F5A" stroke-width="2.5" stroke-linecap="round"/>
+      <!-- Tai trái (góc nhìn người xem) -->
+      <path d="M15 40 L20 5 L45 25 Z" fill="#FFF" stroke="#111" stroke-width="3" stroke-linejoin="round"/>
+      <!-- Tai phải -->
+      <path d="M105 40 L100 5 L75 25 Z" fill="#FFF" stroke="#111" stroke-width="3" stroke-linejoin="round"/>
+      <!-- Khuôn mặt (Vẽ đè lên tai để che nét đứt) -->
+      <ellipse cx="60" cy="60" rx="55" ry="42" fill="#FFF" stroke="#111" stroke-width="3"/>
+      <!-- Mắt -->
+      <ellipse cx="35" cy="65" rx="4.5" ry="7" fill="#111"/>
+      <ellipse cx="85" cy="65" rx="4.5" ry="7" fill="#111"/>
+      <!-- Mũi vàng -->
+      <ellipse cx="60" cy="72" rx="6" ry="4" fill="#FFD700" stroke="#111" stroke-width="2"/>
+      <!-- Râu bên trái -->
+      <path d="M5 55 L22 60 M2 65 L20 65 M5 75 L22 70" fill="none" stroke="#111" stroke-width="3" stroke-linecap="round"/>
+      <!-- Râu bên phải -->
+      <path d="M115 55 L98 60 M118 65 L100 65 M115 75 L98 70" fill="none" stroke="#111" stroke-width="3" stroke-linecap="round"/>
+      <!-- Nơ đỏ (Bên tai phải của Kitty, tức là bên trái người xem) -->
+      <path d="M45 15 C55 5, 60 25, 45 30 C30 25, 35 5, 45 15 Z" fill="#FF0000" stroke="#111" stroke-width="2"/>
+      <path d="M25 15 C15 5, 10 25, 25 30 C40 25, 35 5, 25 15 Z" fill="#FF0000" stroke="#111" stroke-width="2"/>
+      <circle cx="35" cy="22" r="6" fill="#FF0000" stroke="#111" stroke-width="2"/>
     </symbol>
 
-    <!-- Chân mèo (tô bằng currentColor, đổi màu bằng CSS) -->
+    <!-- Bao thư hoa đào hồng và dấu sáp đỏ -->
+    <symbol id="i-envelope" viewBox="0 0 160 120">
+      <!-- Khung bìa thư sau -->
+      <rect x="10" y="25" width="140" height="85" fill="#FFE4EC" stroke="#8C2F5A" stroke-width="2" rx="4"/>
+      <!-- Cánh gấp 2 bên -->
+      <path d="M10 25 L70 70 L10 110 Z" fill="#FFF6EE" stroke="#8C2F5A" stroke-width="2" stroke-linejoin="round"/>
+      <path d="M150 25 L90 70 L150 110 Z" fill="#FFF6EE" stroke="#8C2F5A" stroke-width="2" stroke-linejoin="round"/>
+      <!-- Cánh gấp dưới -->
+      <path d="M10 110 L80 70 L150 110 Z" fill="#FFC2D6" stroke="#8C2F5A" stroke-width="2" stroke-linejoin="round"/>
+      <!-- Nhành hoa trang trí -->
+      <path d="M15 100 Q 40 40 80 20" fill="none" stroke="#5b6647" stroke-width="1.5" stroke-linecap="round"/>
+      <path d="M145 100 Q 120 40 80 20" fill="none" stroke="#5b6647" stroke-width="1.5" stroke-linecap="round"/>
+      <circle cx="35" cy="55" r="4.5" fill="#FF8FB1" stroke="#8C2F5A" stroke-width="1"/>
+      <circle cx="125" cy="55" r="4.5" fill="#FF8FB1" stroke="#8C2F5A" stroke-width="1"/>
+      <circle cx="55" cy="30" r="6" fill="#FF8FB1" stroke="#8C2F5A" stroke-width="1"/>
+      <circle cx="105" cy="30" r="6" fill="#FF8FB1" stroke="#8C2F5A" stroke-width="1"/>
+      <circle cx="80" cy="15" r="7" fill="#FF8FB1" stroke="#8C2F5A" stroke-width="1"/>
+      <!-- Cánh gấp trên -->
+      <path d="M10 25 L80 80 L150 25 Z" fill="#FFC2D6" stroke="#8C2F5A" stroke-width="2" stroke-linejoin="round"/>
+      <!-- Dấu sáp đỏ -->
+      <circle cx="80" cy="75" r="14" fill="#D32F2F" stroke="#B71C1C" stroke-width="2"/>
+      <!-- Họa tiết nhỏ trên dấu sáp -->
+      <path d="M74 72 Q80 82 86 72" fill="none" stroke="#FFCDD2" stroke-width="1.5" stroke-linecap="round"/>
+      <path d="M80 66 L80 80" fill="none" stroke="#FFCDD2" stroke-width="1.5" stroke-linecap="round"/>
+    </symbol>
+
+    <!-- Chân mèo -->
     <symbol id="i-paw" viewBox="0 0 64 64">
       <ellipse cx="12" cy="30" rx="6.5" ry="8.5" fill="currentColor" transform="rotate(-20 12 30)"/>
       <ellipse cx="25" cy="16" rx="6.5" ry="9" fill="currentColor" transform="rotate(-8 25 16)"/>
@@ -71,207 +84,59 @@
 </svg>
 
 <div id="app" class="app">
-
-  <!-- ===== NỀN WATERCOLOR / KHÓI HỒNG (trang trí) ===== -->
-  <div class="bg" aria-hidden="true">
+  <!-- NỀN WATERCOLOR & HẠT LƠ LỬNG -->
+  <div class="bg" id="bg-canvas" aria-hidden="true">
     <span class="bg-blob bg-blob--pink"></span>
     <span class="bg-blob bg-blob--blue"></span>
     <span class="bg-blob bg-blob--cream"></span>
+    <!-- Các hạt (cánh hoa, bong bóng) sẽ được JS tự động thêm vào đây -->
   </div>
 
-  <!-- ===== ĐIỀU KHIỂN CHUNG: nút bật/tắt nhạc (góc trên phải) ===== -->
-  <button id="btn-music" class="ctrl-music" type="button" aria-label="Nhạc nền (bật hoặc tắt)" aria-pressed="false">
+  <!-- Nút nhạc -->
+  <button id="btn-music" class="ctrl-music" type="button" aria-label="Nhạc nền" aria-pressed="false">
     <svg class="ico" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
       <path d="M9 18V5l12-2v13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
       <circle cx="6" cy="18" r="3" fill="currentColor"/>
       <circle cx="18" cy="16" r="3" fill="currentColor"/>
-      <!-- Gạch chéo: CSS chỉ hiện khi aria-pressed="false" -->
       <line class="ico-slash" x1="3" y1="3" x2="21" y2="21" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/>
     </svg>
   </button>
 
-  <!-- ===== SÂN KHẤU: 7 CẢNH ===== -->
   <div id="stage" class="stage" role="main">
-
-    <!-- CẢNH 0: Mở đầu — chạm mèo để bắt đầu (lần chạm đầu cũng mở nhạc) -->
+    <!-- CẢNH 0: Mở đầu -->
     <section class="scene is-active" id="scene-0" data-scene="0" aria-label="Mở đầu">
       <div class="scene-inner">
         <p class="eyebrow">Gửi <span data-bind="herName">Kim</span> 🐾</p>
         <h1 class="title script" id="s0-title">Một năm yêu nhau</h1>
-        <button id="s0-start" class="cat-btn" type="button" aria-label="Chạm vào bé mèo để mở quà">
-          <svg class="cat-svg" aria-hidden="true" focusable="false"><use href="#i-cat"/></svg>
+        
+        <button id="s0-start" class="envelope-btn" type="button" aria-label="Chạm vào bao thư để mở quà">
+          <div class="envelope-wrapper">
+            <!-- Mèo Hello Kitty núp sau bìa thư -->
+            <svg class="cat-svg hello-kitty" aria-hidden="true"><use href="#i-cat"/></svg>
+            <!-- Bao thư -->
+            <svg class="env-svg" aria-hidden="true"><use href="#i-envelope"/></svg>
+          </div>
         </button>
-        <p class="hint">Chạm vào bé mèo để mở quà nhé</p>
+        <p class="hint">Chạm vào bao thư để mở quà nhé</p>
       </div>
       <button class="btn-skip" type="button" data-action="next" aria-label="Bỏ qua cảnh này">Bỏ qua ›</button>
     </section>
 
-    <!-- CẢNH 1: Đếm ngày yêu nhau -->
-    <section class="scene" id="scene-1" data-scene="1" aria-label="Đếm ngày yêu nhau" inert aria-hidden="true">
-      <div class="scene-inner">
-        <p class="eyebrow">Mình đã yêu nhau được</p>
-        <div class="counter" id="s1-counter" role="timer" aria-live="off">
-          <div class="counter-item"><span class="counter-num" id="s1-days">0</span><span class="counter-label">ngày</span></div>
-          <div class="counter-item"><span class="counter-num" id="s1-hours">0</span><span class="counter-label">giờ</span></div>
-          <div class="counter-item"><span class="counter-num" id="s1-mins">0</span><span class="counter-label">phút</span></div>
-          <div class="counter-item"><span class="counter-num" id="s1-secs">0</span><span class="counter-label">giây</span></div>
-        </div>
-        <p class="sub">
-          <svg class="ico heart-ico" aria-hidden="true" focusable="false"><use href="#i-heart"/></svg>
-          kể từ ngày <span data-bind="startDateText">23/11/2025</span>
-        </p>
-        <div class="heart-stage" id="s1-hearts" aria-hidden="true"></div>
-        <button class="btn-primary" type="button" data-action="next">Tiếp tục</button>
-      </div>
-      <button class="btn-skip" type="button" data-action="next" aria-label="Bỏ qua cảnh này">Bỏ qua ›</button>
-    </section>
+    <!-- Các cảnh placeholder -->
+    <section class="scene" id="scene-1" inert aria-hidden="true"><div class="scene-inner"><p>Scene 1 Placeholder</p><button class="btn-skip" data-action="next">Bỏ qua ›</button></div></section>
+    <section class="scene" id="scene-2" inert aria-hidden="true"><div class="scene-inner"><p>Scene 2 Placeholder</p><button class="btn-skip" data-action="next">Bỏ qua ›</button></div></section>
+    <section class="scene" id="scene-3" inert aria-hidden="true"><div class="scene-inner"><p>Scene 3 Placeholder</p><button class="btn-skip" data-action="next">Bỏ qua ›</button></div></section>
+    <section class="scene" id="scene-4" inert aria-hidden="true"><div class="scene-inner"><p>Scene 4 Placeholder</p><button class="btn-skip" data-action="next">Bỏ qua ›</button></div></section>
+    <section class="scene" id="scene-5" inert aria-hidden="true"><div class="scene-inner"><p>Scene 5 Placeholder</p><button class="btn-skip" data-action="next">Bỏ qua ›</button></div></section>
+    <section class="scene" id="scene-6" inert aria-hidden="true"><div class="scene-inner"><p>Scene 6 Placeholder</p><button class="btn-skip" data-action="restart">Quay lại</button></div></section>
+  </div>
 
-    <!-- CẢNH 2: Ảnh kỷ niệm -->
-    <section class="scene" id="scene-2" data-scene="2" aria-label="Khoảnh khắc của mình" inert aria-hidden="true">
-      <div class="scene-inner">
-        <h2 class="title script">Khoảnh khắc của mình</h2>
-        <div class="gallery" id="s2-gallery">
-          <div class="gallery-stage" id="s2-stage" aria-live="polite"></div>
-          <p class="gallery-caption" id="s2-caption"></p>
-          <p class="gallery-date" id="s2-date"></p>
-          <div class="gallery-nav">
-            <button id="s2-prev" class="btn-round" type="button" aria-label="Ảnh trước"><span aria-hidden="true">‹</span></button>
-            <span class="gallery-count" id="s2-count">1 / 1</span>
-            <button id="s2-next" class="btn-round" type="button" aria-label="Ảnh kế tiếp"><span aria-hidden="true">›</span></button>
-          </div>
-        </div>
-        <button class="btn-primary" type="button" data-action="next">Tiếp tục</button>
-      </div>
-      <button class="btn-skip" type="button" data-action="next" aria-label="Bỏ qua cảnh này">Bỏ qua ›</button>
-    </section>
-
-    <!-- CẢNH 3: Lá thư -->
-    <section class="scene" id="scene-3" data-scene="3" aria-label="Lá thư" inert aria-hidden="true">
-      <div class="scene-inner">
-        <article class="letter" id="s3-letter">
-          <h2 class="letter-to script">Gửi <span data-bind="herName">Kim</span>,</h2>
-          <p class="letter-body" id="s3-body"></p>
-          <p class="letter-sign script" id="s3-sign">— <span data-bind="myName">Bảo</span></p>
-        </article>
-        <button class="btn-primary" type="button" id="s3-continue" data-action="next">Tiếp tục</button>
-      </div>
-      <button class="btn-skip" type="button" data-action="next" aria-label="Bỏ qua cảnh này">Bỏ qua ›</button>
-    </section>
-
-    <!-- CẢNH 4: Bài hát và lời nhắn thoại -->
-    <section class="scene" id="scene-4" data-scene="4" aria-label="Bài hát và lời nhắn" inert aria-hidden="true">
-      <div class="scene-inner">
-        <h2 class="title script">Bài hát của mình</h2>
-        <div class="player" id="s4-player">
-          <div class="player-cover" id="s4-cover" role="img" aria-label="Ảnh bìa bài hát"></div>
-          <p class="player-title" id="s4-title"></p>
-          <p class="player-artist" id="s4-artist"></p>
-          <div class="player-bar" id="s4-bar" role="progressbar" aria-label="Tiến độ bài hát" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
-            <span class="player-bar-fill" id="s4-fill"></span>
-          </div>
-          <!-- &#xFE0E; ép hiển thị dạng chữ, tránh iOS/Android biến ▶ thành emoji màu -->
-          <button id="s4-play" class="btn-round btn-round--lg" type="button" aria-label="Phát hoặc tạm dừng bài hát" aria-pressed="false">
-            <span aria-hidden="true">&#9654;&#xFE0E;</span>
-          </button>
-          <!-- Chỉ hiện nếu CONFIG.music.youtubeId có giá trị -->
-          <div class="yt-box" id="s4-yt" hidden></div>
-        </div>
-        <div class="voice" id="s4-voice-box">
-          <button id="s4-voice" class="btn-pill" type="button" aria-label="Nghe lời nhắn thoại">
-            <span aria-hidden="true">💌</span> Nghe lời nhắn thoại
-          </button>
-          <div class="wave" id="s4-wave" aria-hidden="true"></div>
-        </div>
-        <button class="btn-primary" type="button" data-action="next">Tiếp tục</button>
-      </div>
-      <button class="btn-skip" type="button" data-action="next" aria-label="Bỏ qua cảnh này">Bỏ qua ›</button>
-    </section>
-
-    <!-- CẢNH 5: Những nơi mình đã đến (bản đồ vẽ tay bằng SVG, không tải bản đồ ngoài) -->
-    <section class="scene" id="scene-5" data-scene="5" aria-label="Những nơi mình đã đến" inert aria-hidden="true">
-      <div class="scene-inner">
-        <h2 class="title script">Những nơi mình đã đến</h2>
-        <div class="places" id="s5-places">
-          <div class="map" id="s5-map" role="img" aria-label="Bản đồ vẽ tay những nơi mình đã đến"></div>
-          <ul class="pins" id="s5-pins"></ul>
-          <div class="place-card" id="s5-card" aria-live="polite">
-            <h3 class="place-name" id="s5-name"></h3>
-            <p class="place-story" id="s5-story"></p>
-          </div>
-        </div>
-        <button class="btn-primary" type="button" data-action="next">Tiếp tục</button>
-      </div>
-      <button class="btn-skip" type="button" data-action="next" aria-label="Bỏ qua cảnh này">Bỏ qua ›</button>
-    </section>
-
-    <!-- CẢNH 6: Đêm neon + mã QR + lối vào trang sở thích (cảnh cuối, không có nút Bỏ qua) -->
-    <section class="scene scene--night" id="scene-6" data-scene="6" aria-label="Lời yêu thương" inert aria-hidden="true">
-      <canvas id="s6-stars" class="stars" aria-hidden="true"></canvas>
-      <div class="scene-inner">
-        <div class="neon" id="s6-neon" aria-live="polite"></div>
-        <p class="finale-sign script">— <span data-bind="myName">Bảo</span> 🐾</p>
-
-        <div class="qr-card" id="qr-card">
-          <div class="qr-box" id="qr-box" role="img" aria-label="Mã QR mở trang web này trên điện thoại"></div>
-          <p class="qr-note">Quét mã để mở web này trên điện thoại</p>
-          <p class="qr-url" id="qr-url"></p>
-        </div>
-
-        <div class="finale-actions">
-          <a class="btn-primary" id="s6-likes" href="#likes">Xem những điều em thích</a>
-          <button class="btn-ghost" id="s6-replay" type="button" data-action="restart">Xem lại từ đầu</button>
-        </div>
-      </div>
-    </section>
-
-  </div><!-- /#stage -->
-
-  <!-- ===== TRANG SỞ THÍCH (vào trực tiếp bằng URL có #likes) ===== -->
-  <main id="page-likes" class="page-likes" aria-labelledby="likes-title" hidden>
-    <header class="likes-head">
-      <button id="likes-back" class="btn-round" type="button" data-action="home" aria-label="Quay lại"><span aria-hidden="true">‹</span></button>
-      <div class="avatar" id="likes-avatar" role="img" aria-label="Ảnh của Kim"></div>
-      <h1 class="title script" id="likes-title">Những điều <span data-bind="herName">Kim</span> thích</h1>
-    </header>
-
-    <section class="likes-block" id="likes-cats" aria-labelledby="likes-cats-h">
-      <h2 class="script" id="likes-cats-h">Các bé mèo 🐾</h2>
-      <div class="cat-grid" id="likes-cat-grid"></div>
-    </section>
-
-    <section class="likes-block" id="likes-makeup" aria-labelledby="likes-makeup-h">
-      <h2 class="script" id="likes-makeup-h">Góc makeup 💄</h2>
-      <ul class="chips" id="likes-makeup-list"></ul>
-    </section>
-
-    <section class="likes-block" id="likes-favs" aria-labelledby="likes-favs-h">
-      <h2 class="script" id="likes-favs-h">Những món yêu thích</h2>
-      <ul class="chips" id="likes-fav-list"></ul>
-    </section>
-
-    <footer class="likes-foot">
-      <p>Làm bằng cả trái tim bởi <span data-bind="myName">Bảo</span> 💗</p>
-    </footer>
-  </main>
-
-  <!-- ===== LỚP DÙNG CHUNG: confetti + chuyển cảnh ===== -->
-  <canvas id="confetti" class="confetti" aria-hidden="true"></canvas>
   <div id="transition" class="transition" aria-hidden="true">
     <span class="transition-paw"><svg class="ico" focusable="false"><use href="#i-paw"/></svg></span>
   </div>
-
-  <!-- Âm thanh: nguồn (src) do AudioFX gán từ CONFIG, nên chưa có file cũng không báo lỗi -->
   <audio id="audio-music" preload="none" loop></audio>
   <audio id="audio-voice" preload="none"></audio>
-
-</div><!-- /#app -->
-
-<noscript>
-  <p style="position:fixed;inset:0;display:grid;place-items:center;margin:0;padding:24px;text-align:center;background:#FFF6EE;color:#8C2F5A;font-family:sans-serif">
-    Trang này cần bật JavaScript để mở món quà nhỏ Bảo gửi Kim 🐾
-  </p>
-</noscript>
-
+</div>
 <script src="script.js"></script>
 </body>
 </html>
